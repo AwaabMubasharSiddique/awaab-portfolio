@@ -29,7 +29,7 @@ export default function AnimatedBackground() {
     const speed = 0.008; // pixels per ms
     const boldEvery = 4; // every 4th line slightly bolder
 
-    let startTime = performance.now();
+    const startTime = performance.now();
 
     const render = () => {
       const now = performance.now();
