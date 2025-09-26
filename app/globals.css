@@ -1,26 +1,34 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-neon: #a78bfa; /* purple-400 */
+  --color-neon-2: #22d3ee; /* cyan-400 */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Glow utility */
+.glow {
+  box-shadow: 0 0 20px rgba(167, 139, 250, .35), 0 0 40px rgba(34, 211, 238, .15);
 }
+
+/* Section container */
+.container-section {
+  @apply max-w-6xl mx-auto px-4;
+}
+
+/* Gradient text */
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 via-purple-400 to-cyan-300;
+}
+
+/* Animated background */
+@keyframes bgShift {
+  0% { transform: translate3d(0, 0, 0) scale(1); opacity: .5; }
+  50% { transform: translate3d(-10%, -5%, 0) scale(1.05); opacity: .7; }
+  100% { transform: translate3d(0, 0, 0) scale(1); opacity: .5; }
+}
+
+/* removed old .animated-bg layer; replaced with AnimatedBackground canvas */
