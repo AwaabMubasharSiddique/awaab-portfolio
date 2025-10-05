@@ -13,20 +13,20 @@ const projects: Project[] = [
     title: "Movie Recommendation System",
     description: "Machine learning–based movie recommendation system using collaborative filtering and content-based techniques to suggest relevant movies.",
     href: "#",
-    imageSrc: "/projects/movie-recommend.png",
+    imageSrc: "/projects/movie-recommend.jpg",
     imageAlt: "Movie Recommendation System",
   },
   {
     title: "Insurance Premium Category Predictor",
     description: "An insurance premium prediction app built with FastAPI and Streamlit that lets users input personal details to get real-time premium category predictions.",
     href: "#",
-    imageSrc: "/projects/insurance.png",
+    imageSrc: "/projects/insurance.jpg",
   },
   {
     title: "Workout Buddy",
     description: "A simple MERN stack workout buddy app to log, track, and manage workouts.",
     href: "#",
-    imageSrc: "/projects/workout.png",
+    imageSrc: "/projects/workout.jpg",
   },
 ];
 
