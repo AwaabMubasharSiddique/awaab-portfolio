@@ -11,7 +11,6 @@ const nextConfig: NextConfig = {
       // disable filesystem cache in dev to avoid huge memory spikes on Windows
       // see https://webpack.js.org/configuration/cache/
       // Types are broad; guard before assigning
-      // @ts-expect-error - Next types don't expose full cache shape
       config.cache = false;
     }
     return config;
