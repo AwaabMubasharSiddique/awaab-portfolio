@@ -2,63 +2,89 @@
 
 import { useState } from "react";
 
+type Status = "idle" | "sending" | "sent" | "error";
+
 export default function Contact() {
-  const [status, setStatus] = useState<string | null>(null);
+  const [status, setStatus] = useState<Status>("idle");
+  const [note, setNote] = useState("");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setStatus(null);
     const form = event.currentTarget;
-    const formData = new FormData(form);
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: formData.get("name"),
-        email: formData.get("email"),
-        message: formData.get("message"),
-      }),
-    });
-    const data = await res.json();
-    setStatus(data.message || (res.ok ? "Message sent!" : "Something went wrong"));
-    if (res.ok) form.reset();
+    const data = new FormData(form);
+    setStatus("sending");
+    setNote("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          email: data.get("email"),
+          message: data.get("message"),
+        }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setStatus("sent");
+        setNote(json.message || "Message sent. I'll get back to you soon.");
+        form.reset();
+      } else {
+        setStatus("error");
+        setNote(json.message || "Something went wrong. Try emailing me directly.");
+      }
+    } catch {
+      setStatus("error");
+      setNote("Network error. Try emailing me directly.");
+    }
   }
 
+  const field =
+    "w-full border-[1.5px] border-ink bg-card px-4 py-3 text-ink placeholder:text-mute/70 outline-none shadow-[3px_3px_0_rgba(23,28,23,0.15)] transition-shadow focus:shadow-[3px_3px_0_#2e7d5b]";
+
   return (
-    <section id="contact" className="container-section">
-      <h2 className="text-2xl sm:text-3xl font-bold mb-6 gradient-text">Contact</h2>
-      <form onSubmit={handleSubmit} className="grid gap-4 max-w-xl">
-        <input
-          name="name"
-          placeholder="Name"
-          required
-          className="w-full rounded-md bg-zinc-900/50 border border-white/10 px-4 py-2.5 outline-none focus:border-white/30 transition"
-        />
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          required
-          className="w-full rounded-md bg-zinc-900/50 border border-white/10 px-4 py-2.5 outline-none focus:border-white/30 transition"
-        />
-        <textarea
-          name="message"
-          placeholder="Message"
-          rows={5}
-          required
-          disabled={false}
-          className="w-full rounded-md bg-zinc-900/50 border border-white/10 px-4 py-2.5 outline-none focus:border-white/30 transition resize-none"
-        />
+    <form onSubmit={handleSubmit} className="grid gap-6 sm:grid-cols-2">
+      <input
+        name="name"
+        placeholder="Name"
+        aria-label="Name"
+        required
+        className={field}
+      />
+      <input
+        name="email"
+        type="email"
+        placeholder="Email"
+        aria-label="Email"
+        required
+        className={field}
+      />
+      <textarea
+        name="message"
+        placeholder="Tell me about it…"
+        aria-label="Message"
+        rows={4}
+        required
+        className={`${field} resize-none sm:col-span-2`}
+      />
+      <div className="flex flex-wrap items-center gap-5 sm:col-span-2">
         <button
+          data-magnet
           type="submit"
-          className="justify-self-start px-5 py-2.5 rounded-md bg-gradient-to-r from-fuchsia-600 via-purple-600 to-indigo-600 text-white font-medium glow transition-transform hover:scale-[1.02] active:scale-[.99]"
+          disabled={status === "sending"}
+          className="btn-ink px-7 py-3 font-mono text-xs font-semibold uppercase tracking-[0.25em] disabled:pointer-events-none disabled:opacity-50"
         >
-          Send
+          {status === "sending" ? "Sending…" : "Send message"}
         </button>
-        {status && <p className="text-sm text-zinc-400">{status}</p>}
-      </form>
-    </section>
+        {note && (
+          <p
+            role="status"
+            className={`font-hand text-xl ${status === "error" ? "text-red-700" : "text-forest"}`}
+          >
+            {note}
+          </p>
+        )}
+      </div>
+    </form>
   );
 }
-
-

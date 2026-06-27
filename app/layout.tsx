@@ -1,16 +1,86 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Fraunces, Caveat, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import AnimatedBackground from "@/components/AnimatedBackground";
 
-const inter = Inter({
-  variable: "--font-inter",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["SOFT", "WONK", "opsz"],
+});
+
+const caveat = Caveat({
+  variable: "--font-caveat",
   subsets: ["latin"],
 });
 
+const jetMono = JetBrains_Mono({
+  variable: "--font-jet",
+  subsets: ["latin"],
+});
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://awaab.dev";
+const DESCRIPTION =
+  "Software engineer building and deploying production AI systems: agentic workflows, RAG pipelines, FastAPI backends and document/media automation.";
+
 export const metadata: Metadata = {
-  title: "Awaab Mubashar Siddique | Portfolio",
-  description: "Portfolio of Awaab Mubashar Siddique - Developer",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Awaab Mubashar Siddique · Software Engineer",
+    template: "%s · Awaab Mubashar Siddique",
+  },
+  description: DESCRIPTION,
+  keywords: [
+    "Awaab Mubashar Siddique",
+    "Software Engineer",
+    "AI Engineer",
+    "Agentic AI",
+    "RAG",
+    "LangGraph",
+    "FastAPI",
+    "Machine Learning",
+    "Karachi",
+  ],
+  authors: [{ name: "Awaab Mubashar Siddique", url: SITE_URL }],
+  creator: "Awaab Mubashar Siddique",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    title: "Awaab Mubashar Siddique · Software Engineer",
+    description: DESCRIPTION,
+    siteName: "Awaab Mubashar Siddique",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Awaab Mubashar Siddique · Software Engineer",
+    description: DESCRIPTION,
+  },
+  robots: { index: true, follow: true },
+};
+
+const PERSON_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Awaab Mubashar Siddique",
+  url: SITE_URL,
+  email: "mailto:gr9awaab@gmail.com",
+  jobTitle: "Software Engineer",
+  worksFor: { "@type": "Organization", name: "AppCraftr" },
+  alumniOf: { "@type": "CollegeOrUniversity", name: "Iqra University, Karachi" },
+  address: { "@type": "PostalAddress", addressLocality: "Karachi", addressCountry: "PK" },
+  knowsAbout: [
+    "Agentic AI",
+    "Generative AI",
+    "Retrieval-Augmented Generation",
+    "Backend Development",
+    "Full-Stack Development",
+  ],
+  sameAs: [
+    "https://github.com/AwaabMubasharSiddique",
+    "https://www.linkedin.com/in/awaabmubasharsiddique/",
+  ],
 };
 
 export default function RootLayout({
@@ -20,23 +90,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased bg-[#0b0b12] text-zinc-200`}> 
-        <AnimatedBackground />
-        <div className="min-h-screen flex flex-col">
-          {/* Navbar */}
-          <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-black/40 bg-black/30 border-b border-white/10">
-            <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-              <a href="#home" className="text-sm font-semibold tracking-wider text-white">Awaab.dev</a>
-              <nav className="hidden sm:flex items-center gap-6 text-sm">
-                <a href="#skills" className="hover:text-white/90 transition-colors">Skills</a>
-                <a href="#projects" className="hover:text-white/90 transition-colors">Projects</a>
-                <a href="#contact" className="hover:text-white/90 transition-colors">Contact</a>
-                <a href="/resume.pdf" target="_blank" rel="noreferrer" className="px-3 py-1.5 rounded-md bg-gradient-to-r from-fuchsia-500 via-purple-500 to-indigo-500 text-white shadow-[0_0_20px_rgba(168,85,247,.35)] hover:scale-[1.02] active:scale-[.99] transition-transform">View Resume</a>
-              </nav>
-            </div>
-          </header>
-          <main className="flex-1">{children}</main>
-        </div>
+      <body
+        className={`${fraunces.variable} ${caveat.variable} ${jetMono.variable} bg-paper text-ink antialiased`}
+      >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_SCHEMA) }}
+        />
+        {children}
       </body>
     </html>
   );
