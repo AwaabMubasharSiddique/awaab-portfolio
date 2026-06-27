@@ -1,10 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Keep production builds out of the dev server's .next folder —
+  // Keep local production builds out of the dev server's .next folder:
   // running `next build` while `next dev` is up corrupts shared chunks
   // (MODULE_NOT_FOUND './NNN.js', missing routes-manifest.json).
-  distDir: process.env.NODE_ENV === "production" ? ".next-build" : ".next",
+  // On Vercel (VERCEL=1) always use the default .next, which the platform expects.
+  distDir:
+    !process.env.VERCEL && process.env.NODE_ENV === "production"
+      ? ".next-build"
+      : ".next",
   images: {
     unoptimized: true,
   },
